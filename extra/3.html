@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hhhhhhhh</title>
+    <link rel="stylesheet" href="03.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Login/Signup Section -->
+        <div id="auth-section" class="section active">
+            <div class="auth-container">
+                <div class="auth-left">
+                    <h1>Explore Your Dashboard</h1>
+                    <p class="subtitle">Sign in to unlock powerful analytics, manage your expenses, and collaborate with your team.</p>
+                    
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">📊</div>
+                            <span>Real-time Analytics</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">💰</div>
+                            <span>Expense Management</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">👥</div>
+                            <span>Team Collaboration</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">⚙️</div>
+                            <span>Customizable Settings</span>
+                        </div>
+                    </div>
+                    
+                    <div class="divider">
+                        <span></span>
+                    </div>
+                </div>
+                
+                <div class="auth-right">
+                    <div class="auth-form-container">
+                        <h2>Welcome back</h2>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="Enter your email">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <select id="country">
+                                <option value="">Select your country</option>
+                                <option value="US">United States (USD)</option>
+                                <option value="UK">United Kingdom (GBP)</option>
+                                <option value="EU">European Union (EUR)</option>
+                                <option value="IN">India (INR)</option>
+                                <option value="CA">Canada (CAD)</option>
+                                <option value="AU">Australia (AUD)</option>
+                                <option value="JP">Japan (JPY)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox">
+                                <input type="checkbox" id="remember-me">
+                                <span class="checkmark"></span>
+                                Remember Me
+                            </label>
+                        </div>
+                        
+                        <button class="btn-login" onclick="handleSignup()">
+                            Log In / Sign Up
+                        </button>
+                        
+                        <p class="auth-switch">
+                            First time here? <span>You're automatically signed up!</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="admin-dashboard" class="section">
+            <div class="dashboard-header">
+                <h2>Admin Dashboard - <span id="company-name"></span></h2>
+                <div class="user-info">
+                    <span id="admin-email"></span>
+                    <span class="badge admin-badge">ADMIN</span>
+                    <button class="btn-secondary" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 id="total-users">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3 id="total-expenses">0</h3>
+                        <p>Total Expenses</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <h3 id="pending-approvals-count">0</h3>
+                        <p>Pending Approvals</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-info">
+                        <h3 id="company-currency">USD</h3>
+                        <p>Company Currency</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab('user-management')">User Management</button>
+                <button class="tab-btn" onclick="openTab('approval-rules')">Approval Rules</button>
+                <button class="tab-btn" onclick="openTab('all-expenses')">All Expenses</button>
+            </div>
+
+            <div id="user-management" class="tab-content active">
+                <div class="section-header">
+                    <h3>Manage Users & Teams</h3>
+                    <button class="btn-primary" onclick="showAddUserModal()">
+                        <span class="btn-icon">+</span> Add User
+                    </button>
+                </div>
+                
+                <div class="filters">
+                    <input type="text" id="user-search" placeholder="Search users..." onkeyup="filterUsers()">
+                    <select id="role-filter" onchange="filterUsers()">
+                        <option value="">All Roles</option>
+                        <option value="ADMIN">Admin</option>
+                        <option value="MANAGER">Manager</option>
+                        <option value="EMPLOYEE">Employee</option>
+                    </select>
+                </div>
+                
+                <div id="users-list" class="card-grid"></div>
+            </div>
+
+            <div id="approval-rules" class="tab-content">
+                <div class="section-header">
+                    <h3>Approval Rules Configuration</h3>
+                    <button class="btn-primary" onclick="showAddRuleModal()">
+                        <span class="btn-icon">+</span> Add Rule
+                    </button>
+                </div>
+                <div id="rules-list" class="card-grid"></div>
+            </div>
+
+            <div id="all-expenses" class="tab-content">
+                <div class="section-header">
+                    <h3>All Company Expenses</h3>
+                    <div class="expense-filters">
+                        <select id="expense-status-filter" onchange="filterAllExpenses()">
+                            <option value="">All Status</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="REJECTED">Rejected</option>
+                        </select>
+                        <select id="expense-category-filter" onchange="filterAllExpenses()">
+                            <option value="">All Categories</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Meals">Meals</option>
+                            <option value="Equipment">Equipment</option>
+                            <option value="Software">Software</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="all-expenses-list" class="expenses-grid"></div>
+            </div>
+        </div>
+
+        <!-- Employee Dashboard -->
+        <div id="employee-dashboard" class="section">
+            <div class="dashboard-header">
+                <h2>Employee Dashboard</h2>
+                <div class="user-info">
+                    <span id="employee-email"></span>
+                    <span class="badge employee-badge">EMPLOYEE</span>
+                    <button class="btn-secondary" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            
+            <div class="employee-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📤</div>
+                    <div class="stat-info">
+                        <h3 id="my-submitted-expenses">0</h3>
+                        <p>Submitted</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="my-approved-expenses">0</h3>
+                        <p>Approved</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-info">
+                        <h3 id="my-rejected-expenses">0</h3>
+                        <p>Rejected</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <h3 id="my-pending-expenses">0</h3>
+                        <p>Pending</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openEmpTab('submit-expense')">Submit Expense</button>
+                <button class="tab-btn" onclick="openEmpTab('my-expenses')">My Expenses</button>
+                <button class="tab-btn" onclick="openEmpTab('expense-history')">Expense History</button>
+            </div>
+
+            <div id="submit-expense" class="tab-content active">
+                <div class="expense-form-card">
+                    <h3>Submit New Expense</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expense-amount">Amount *</label>
+                            <input type="number" id="expense-amount" placeholder="0.00" step="0.01" min="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-currency">Currency *</label>
+                            <select id="expense-currency">
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="INR">INR (₹)</option>
+                                <option value="CAD">CAD (C$)</option>
+                                <option value="AUD">AUD (A$)</option>
+                                <option value="JPY">JPY (¥)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expense-category">Category *</label>
+                        <select id="expense-category">
+                            <option value="">Select Category</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Meals">Meals & Entertainment</option>
+                            <option value="Equipment">Equipment</option>
+                            <option value="Software">Software</option>
+                            <option value="Office Supplies">Office Supplies</option>
+                            <option value="Training">Training & Development</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expense-description">Description *</label>
+                        <textarea id="expense-description" placeholder="Brief description of the expense..." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expense-date">Expense Date *</label>
+                        <input type="date" id="expense-date" max="">
+                    </div>
+                    
+                    <div class="form-preview">
+                        <h4>Expense Preview</h4>
+                        <div id="expense-preview" class="preview-card">
+                            <p>Fill the form to see preview</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary btn-submit" onclick="submitExpense()">
+                        <span class="btn-icon">📤</span> Submit Expense
+                    </button>
+                </div>
+            </div>
+
+            <div id="my-expenses" class="tab-content">
+                <div class="section-header">
+                    <h3>My Recent Expenses</h3>
+                    <div class="expense-filters">
+                        <select id="my-expense-status-filter" onchange="filterMyExpenses()">
+                            <option value="">All Status</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="REJECTED">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="employee-expenses-list" class="expenses-grid"></div>
+            </div>
+
+            <div id="expense-history" class="tab-content">
+                <div class="section-header">
+                    <h3>Expense History & Reports</h3>
+                    <button class="btn-secondary" onclick="exportMyExpenses()">
+                        <span class="btn-icon">📊</span> Export Report
+                    </button>
+                </div>
+                <div class="history-stats">
+                    <div class="history-card">
+                        <h4>Total Spent This Month</h4>
+                        <div class="amount" id="monthly-total">$0.00</div>
+                    </div>
+                    <div class="history-card">
+                        <h4>Average Expense</h4>
+                        <div class="amount" id="average-expense">$0.00</div>
+                    </div>
+                </div>
+                <div id="expense-history-list" class="expenses-grid"></div>
+            </div>
+        </div>
+
+        <!-- Manager Dashboard (Simplified for this example) -->
+        <div id="manager-dashboard" class="section">
+            <div class="dashboard-header">
+                <h2>Manager Dashboard</h2>
+                <div class="user-info">
+                    <span id="manager-email"></span>
+                    <span class="badge manager-badge">MANAGER</span>
+                    <button class="btn-secondary" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <!-- Manager content would go here -->
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="add-user-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('add-user-modal')">&times;</span>
+            <h3>Add New User</h3>
+            
+            <div class="form-group">
+                <label for="new-user-email">Email Address *</label>
+                <input type="email" id="new-user-email" placeholder="user@company.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="new-user-role">Role *</label>
+                <select id="new-user-role" onchange="toggleManagerFields()">
+                    <option value="EMPLOYEE">Employee</option>
+                    <option value="MANAGER">Manager</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="manager-assignment-group">
+                <label for="new-user-manager">Assign Manager</label>
+                <select id="new-user-manager">
+                    <option value="">No Manager</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="manager-approver-group" style="display: none;">
+                <label class="checkbox">
+                    <input type="checkbox" id="is-manager-approver"> 
+                    <span class="checkmark"></span>
+                    This manager can approve expenses
+                </label>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal('add-user-modal')">Cancel</button>
+                <button class="btn-primary" onclick="addUser()">Add User</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-user-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('edit-user-modal')">&times;</span>
+            <h3>Edit User</h3>
+            <div id="edit-user-form"></div>
+        </div>
+    </div>
+
+    <div id="add-rule-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('add-rule-modal')">&times;</span>
+            <h3>Add Approval Rule</h3>
+            <!-- Rule form content -->
+        </div>
+    </div>
+
+    <script src="3.js"></script>
+</body>
+</html>
